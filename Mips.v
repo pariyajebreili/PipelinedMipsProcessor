@@ -1,23 +1,41 @@
 `timescale 1ns/1ns
-module Mips(clk, rst, pc_in ,Instruction, ReadData1, ReadData2,  WriteDataReg,
+module Mips(clk, rst, pc_in , PCNext, Instruction, ReadData1, ReadData2,  WriteDataReg,
       WriteReg, Zero, branch, RegDst, RegWrite, MemToReg, ALUSrc, MemRead, MemWrite, ALUOperation);
 	
 	input clk,rst;
 	
-      output wire [4:0] WriteReg;
+	output wire [4:0] WriteReg;
 	output wire [31:0] Instruction,ReadData1, ReadData2,WriteDataReg;
-	output wire [31:0] pc_in;
+	output wire [31:0] pc_in, PCNext;
 	output wire RegDst, RegWrite, MemToReg,ALUSrc,
 	Zero, MemRead, MemWrite, branch;
 	output wire [1:0] ALUOperation;
 
 	wire [31:0] AddAluOut,ShiftOut,extend32, alu_b, alu_out, MemReadData;
-      wire branch_zero_and;
+	wire branch_zero_and;
+	wire [31:0] PCPlusOne, branchAddress;
 
 
+	// // IF registers
+	// wire [31:0] InstructionIF, PCPlusOneIF;
+	// // ID registers
+	// wire [31:0] ReadData1ID, ReadData2ID;
+	// wire [31:0] InstructionID, PCPlusOneID;
+	// wire RegDstID, RegWriteID, MemToRegID,ALUSrcID,
+	// 			ZeroID, MemReadID, MemWriteID, branchID;
+	// wire [1:0] ALUOperation;
+	// // EX registers
 
-      and(branch_zero_and, branch, Zero);
-	ProgramCounter PC(.clk(clk), .rst(rst), .PcIn(pc_in), .new_pc(AddAluOut), .branch_zero_and(branch_zero_and), .PcNext(pc_in));
+	// // MEM registers
+	// wire [31:0] WriteDataRegMEM;
+	// // WB registers
+	// wire [4:0] writeRegWB;
+	// wire RegWriteWB;
+
+
+	and(branch_zero_and, branch, Zero);
+	// ProgramCounter PC(.clk(clk), .rst(rst), .PcIn(pc_in), .new_pc(AddAluOut), .branch_zero_and(branch_zero_and), .PcNext(pc_in));
+	ProgramCounter PC(.clk(clk), .rst(rst), .PcNext(PCNext), .PcIn(pc_in));
    
 
 
@@ -25,10 +43,14 @@ module Mips(clk, rst, pc_in ,Instruction, ReadData1, ReadData2,  WriteDataReg,
 	SignExtend SE16TO32(Instruction[15:0],extend32);
 
 
+	Adder PcAdder(.In1(pc_in), .In2(32'h00000001),.AddAluOut(PCPlusOne));
 
-	PcAdder PCADDER(.PcNext(pc_in), .ShiftOut(extend32),.AddAluOut(AddAluOut));
+	Adder BranchAdder(.In1(PCPlusOne), .In2(extend32),.AddAluOut(branchAddress));
+	// PcAdder PCADDER(.PcNext(pc_in), .ShiftOut(extend32),.AddAluOut(AddAluOut));
 
 
+	mux_2_to_1_32bits mux_after_pc_adder(.Input0(PCPlusOne), .Input1(branchAddress),
+       .Selector(branch_zero_and), .Output1(PCNext));
 
 	IntructionMemory IM(.Address(pc_in), .Instruction(Instruction));
 

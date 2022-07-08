@@ -6,11 +6,11 @@ module testbech();
       wire ALUSrc,Zero;
       wire [4:0] WriteReg;
       wire [1:0] ALUOperation;
-      wire [31:0] Instruction, pc_in, ReadData1, ReadData2, WriteDataReg;
+      wire [31:0] Instruction, pc_in, PCNext, ReadData1, ReadData2, WriteDataReg;
  
       integer i;
    
-      Mips MIPS(clk, rst, pc_in ,Instruction, ReadData1, ReadData2,  WriteDataReg,
+      Mips MIPS(clk, rst, pc_in , PCNext, Instruction, ReadData1, ReadData2,  WriteDataReg,
       WriteReg, Zero, branch, RegDst, RegWrite, MemToReg, ALUSrc, MemRead, MemWrite, ALUOperation);
       
  
