@@ -1,22 +1,18 @@
 `timescale 1ns/1ns
-module Mips(clk, rst, pc_in, PCNext ,Instruction, ReadData1, ReadData2,  WriteDataReg,
-      WriteReg, Zero, branch, RegDst, RegWrite, MemToReg, ALUSrc, MemRead, MemWrite, ALUOperation, MemReadData, alu_out, alu_b);
+module Mips(clk, rst, pc_in ,Instruction, ReadData1, ReadData2,  WriteDataReg,
+      WriteReg, Zero, branch, RegDst, RegWrite, MemToReg, ALUSrc, MemRead, MemWrite, ALUOperation);
 	
 	input clk,rst;
 	
       output wire [4:0] WriteReg;
-	output wire [31:0] Instruction,ReadData1, ReadData2,WriteDataReg, alu_out, MemReadData;
-	output wire [31:0] pc_in, PCNext, alu_b;
-	
-	
+	output wire [31:0] Instruction,ReadData1, ReadData2,WriteDataReg;
+	output wire [31:0] pc_in;
 	output wire RegDst, RegWrite, MemToReg,ALUSrc,
 	Zero, MemRead, MemWrite, branch;
 	output wire [1:0] ALUOperation;
-	wire [31:0] AddAluOut,ShiftOut,extend32;
 
-   wire branch_zero_and;
-      // wire [31:0] MemReadData;
-   wire [31:0] pc_out;
+	wire [31:0] AddAluOut,ShiftOut,extend32, alu_b, alu_out, MemReadData;
+      wire branch_zero_and;
 
 
 
@@ -32,11 +28,8 @@ module Mips(clk, rst, pc_in, PCNext ,Instruction, ReadData1, ReadData2,  WriteDa
 
 	PcAdder PCADDER(.PcNext(pc_in), .ShiftOut(extend32),.AddAluOut(AddAluOut));
 
-	// mux_2_to_1_32bits mux_after_pc_adder(.Input0(PCNext), .Input1(AddAluOut),
-      //  .Selector(branch_zero_and), .Output1(PCNext));
 
 
-      /* pc_in or PCNext? obviously pc_in but why it's not working.................. */
 	IntructionMemory IM(.Address(pc_in), .Instruction(Instruction));
 
       
@@ -64,42 +57,5 @@ module Mips(clk, rst, pc_in, PCNext ,Instruction, ReadData1, ReadData2,  WriteDa
 	mux_2_to_1_32bits mux_affter_memory(.Input0(alu_out), .Input1(MemReadData), .Selector(MemToReg), .Output1(WriteDataReg));
 
 	
-
-endmodule
-
-
-module testbech();
-
-      reg clk,rst;
-      wire ALUSrc,Zero;
-      wire [4:0] WriteReg;
-      wire [1:0] ALUOperation;
-      wire [31:0] Instruction,alu_b, pc_in, PCNext, ReadData1, ReadData2, WriteDataReg, MemReadData, alu_out;
- 
-      integer i;
-   
-      Mips MIPS(clk, rst, pc_in, PCNext ,Instruction, ReadData1, ReadData2,  WriteDataReg,
-      WriteReg, Zero, branch, RegDst, RegWrite, MemToReg, ALUSrc, MemRead, MemWrite, ALUOperation, MemReadData, alu_out, alu_b);
-      
- 
-    initial begin
-   
-       rst = 1;
-       clk = 0;
-       clk = 1;
-       
-       #50;
-       rst = 0;
-
-          
-       
-       for(i = 0; i <= 20; i = i + 1)
-       begin
-          
-          clk = ~clk;
-          #50;
-       end
-       
-   end
 
 endmodule

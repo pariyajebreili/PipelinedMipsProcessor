@@ -7,6 +7,7 @@
 `define SW     6'b101011
 `define BEQ    6'b000100
 `define RTYPE  6'b000000
+
 `timescale 1ns/1ns
 
 module Controller(func, opcode,RegDst,RegWrite, ALUSrc,MemToReg, MemRead, MemWrite,branch,ALUOperation);

@@ -2,6 +2,7 @@
 `define OR  2'b01
 `define ADD 2'b10
 `define SUB 2'b11
+
 `timescale 1ns/1ns
 
 module ALU(Operand1, Operand2, ALUControl, ALUResult, Zero);
