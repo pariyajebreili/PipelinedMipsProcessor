@@ -55,51 +55,51 @@ module Mips();
 	wire [31:0] branchAddress;
 	wire branch_zero_and;
 
-	IF_ID_Stage IF_ID (clk, PCPlusOneIF, InstructionIF, PCPlusOneID, InstructionID, stallIF_ID, branch_zero_and);
+	IFIDReg IF_ID (clk, PCPlusOneIF, InstructionIF, PCPlusOneID, InstructionID, stallIF_ID, branch_zero_and);
 
 
-	ID_EX_Stage ID_EX (clk, RegWriteID, MemtoRegID, MemWriteID, MemReadID, ALUSrcID, ALUOperationID, RegDstID,
+	IDEXReg ID_EX (clk, RegWriteID, MemtoRegID, MemWriteID, MemReadID, ALUSrcID, ALUOperationID, RegDstID,
 	    PCPlusOneID, ReadData1ID, ReadData2ID, InstructionID[25:11] /* 25:21, 20:16, 15:11 */, 
 		extend32ID, PCPlusOneEX, ReadData1EX, ReadData2EX, extend32EX, RsEX, RtEx, RdEx, 
 		RegWriteEX, MemToRegEX, MemWriteEX, MemReadEX, ALUSrcEX, ALUOperationEX, RegDstEX);
 	
-	EX_MEM_Stage EX_MEM (clk, RegWriteEX, MemtoRegEX, MemWriteEX, MemReadEX, ALUResultEX, ALUData2Mux_1Out,
+	EXMemReg EX_MEM (clk, RegWriteEX, MemtoRegEX, MemWriteEX, MemReadEX, ALUResultEX, ALUData2Mux_1Out,
 	RegMuxOut, RegWriteMEM, MemtoRegMEM, MemWriteMEM, MemReadMEM, ALUResultMEM, MemWriteDataMEM /* input of mem */, WriteRegMEM);
 
 
-	MEM_WB_Stage MEM_WB (clk, RegWriteMEM, MemtoRegMEM, ALUResultMEM, MemReadDataMEM /* change mem out */ ,
+	MemWbReg MEM_WB (clk, RegWriteMEM, MemtoRegMEM, ALUResultMEM, MemReadDataMEM /* change mem out */ ,
 	WriteRegMEM, RegWriteWB, MemToRegWB, MemReadDataWB, ALUResultWB, WriteRegWB);
 
 
 
 
 
-	Mux3x1_32Bits EX_FirstMux(ALUData1, ReadData1EX, WriteDataRegMEM, ALUResultMEM, FirstMuxSel);
+	mux_3_to_1_32bits EX_FirstMux(ALUData1, ReadData1EX, WriteDataRegMEM, ALUResultMEM, FirstMuxSel);
 
-	Mux3x1_32Bits EX_SecondMux(ALUData2Mux_1Out, ReadData2EX, WriteDataRegMEM, ALUResultMEM, SecondMuxSel);
+	mux_3_to_1_32bits EX_SecondMux(ALUData2Mux_1Out, ReadData2EX, WriteDataRegMEM, ALUResultMEM, SecondMuxSel);
 
-	Mux2x1_5Bits EX_ThirdMux(RegMuxOut, RtEX, RdEX, RegDstEX);
+	mux_2_to_1_5bits EX_ThirdMux(RegMuxOut, RtEX, RdEX, RegDstEX);
 
-	Mux2x1_32Bits Mux_After_EX_SecondMux(ALUData2, ALUData2Mux_1Out, extend32EX, ALUSrcEX);
+	MUX_2_to_1_32bits Mux_After_EX_SecondMux(ALUData2, ALUData2Mux_1Out, extend32EX, ALUSrcEX);
 
 	/* Awwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww */
-	Mux2x1_10Bits ID_EXRegMux(controlSignalsID, {RegWriteID, MemtoRegID, MemWriteID, MemReadID, ALUSrcID, ALUOpID, RegDstID}
+	mux_2_to_1_10bits ID_EXRegMux(controlSignalsID, {RegWriteID, MemtoRegID, MemWriteID, MemReadID, ALUSrcID, ALUOpID, RegDstID}
 			,10'b0000000000, hazardMuxSelector);
 
-	HazardDetectionUnit hazardUnit(MemReadEX, MemReadMEM, RtEX, InstructionID, stallPC, holdIF_ID, hazardMuxSelector);
+	HazardDetection hazardUnit(MemReadEX, MemReadMEM, RtEX, InstructionID, stallPC, holdIF_ID, hazardMuxSelector);
 
 
-	ForwardingUnit forwardingUnit(RegWriteMEM, writeRegMEM, RegWriteWB, WriteRegWB, RsEX, RtEX
+	Forwarding forwardingUnit(RegWriteMEM, writeRegMEM, RegWriteWB, WriteRegWB, RsEX, RtEX
 			,FirstMuxSel,SecondMuxSel, comparatorMux1Selector,comparatorMux2Selector);
 
 	// forwarding multiplexers before alu
-	Mux3x1_32Bits comparatorMux1(comparatorMux1Out, ReadData1ID, ALUResultMEM, WriteDataRegMEM, comparatorMux1Selector);
-	Mux3x1_32Bits comparatorMux2(comparatorMux2Out, ReadData2ID, ALUResultMEM, WriteDataRegMEM, comparatorMux2Selector);
+	mux_3_to_1_32bits comparatorMux1(comparatorMux1Out, ReadData1ID, ALUResultMEM, WriteDataRegMEM, comparatorMux1Selector);
+	mux_3_to_1_32bits comparatorMux2(comparatorMux2Out, ReadData2ID, ALUResultMEM, WriteDataRegMEM, comparatorMux2Selector);
 
 	// branch hazard comparator
 	Comparator comparator(comparatorMux1Out, comparatorMux2Out, equalFlag);
 
-	Mux2x1_32Bits WB_Mux(WriteDataRegMEM, ALUResultWB, MemReadDataMEM, MemtoRegWB);
+	MUX_2_to_1_32bits WB_Mux(WriteDataRegMEM, ALUResultWB, MemReadDataMEM, MemtoRegWB);
 
 
 	/* ####################################################################################################### */
