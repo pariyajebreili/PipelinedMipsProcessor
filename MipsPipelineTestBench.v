@@ -37,12 +37,6 @@ IF_ID_reg IF_ID(PCPlus4IF, instructionIF, instructionID, clk, holdIF_ID, PCPlus4
 
 //ID_Stage
 ControlUnit controlUnit(instructionID[31:26],RegDstID,branchID,MemReadID,MemtoRegID,ALUOpID,MemWriteID,ALUSrcID,RegWriteID, reset);
-// Controller controller(.func(instructionID[5:0]),
-//  .opcode(instructionID[31:26]),.RegDst(RegDstID),
-//  .RegWrite(RegWriteID), .ALUSrc(ALUSrcID),
-// .MemToReg(MemtoRegID), .MemRead(MemReadID),
-//  .MemWrite(MemWriteID),.branch(branchID),.ALUOperation(ALUOpID));
-
 RegisterFile regiterFile(instructionID[25:21], instructionID[20:16], writeRegWB, regWriteDataMEM, RegWriteWB, clk, registerData1ID, registerData2ID, reset);
 Mux3x1_32Bits comparatorMux1(comparatorMux1Out, registerData1ID, ALUResultMEM, regWriteDataMEM, comparatorMux1Selector);
 Mux3x1_32Bits comparatorMux2(comparatorMux2Out, registerData2ID, ALUResultMEM, regWriteDataMEM, comparatorMux2Selector);
@@ -51,6 +45,8 @@ SignExtend signExtend(instructionID[15:0], signExtendOutID);
 ShiftLeft2 shiftLeft2(shiftOut, signExtendOutID);
 Adder branchAdder(branchAddress, shiftOut, PCPlus4ID);
 HazardDetectionUnit hazardUnit(MemReadEX, MemReadMEM, rtEX, instructionID, holdPC, holdIF_ID, hazardMuxSelector);
+// module HazardDetectionUnit(ID_ExMemRead,EX_MemMemRead,ID_Ex_Rt,IF_ID_Instr,holdPC,holdIF_ID,muxSelector);
+
 Mux2x1_10Bits ID_EXRegMux(controlSignalsID, {RegWriteID, MemtoRegID, MemWriteID, MemReadID, ALUSrcID, ALUOpID, RegDstID}
 			,10'b0000000000, hazardMuxSelector);
 ID_EX_reg ID_EX(RegWriteID, MemtoRegID, MemWriteID, MemReadID, ALUSrcID, ALUOpID, RegDstID, PCPlus4ID,registerData1ID ,registerData2ID
@@ -63,8 +59,7 @@ Mux3x1_32Bits ALUData1Mux(ALUData1, registerData1EX, regWriteDataMEM, ALUResultM
 Mux3x1_32Bits ALUData2Mux_1(ALUData2Mux_1Out, registerData2EX, regWriteDataMEM, ALUResultMEM, lowerMux_sel);
 Mux2x1_32Bits ALUData2Mux_2(ALUData2, ALUData2Mux_1Out, signExtendOutEX, ALUSrcEX);
 ALUControl AluControl(clk, ALUControl, ALUOpEX, signExtendOutEX[5:0]);
-ALU32Bit ALU(ALUData1, ALUData2, ALUOpEX, signExtendOutEX[10:6], overFlow, zero, ALUResultEX, reset);
-// ALU alu(ALUData1, ALUData2, ALUOpEX, ALUResultEX, zero);
+ALU32Bit ALU(ALUData1, ALUData2, ALUControl, signExtendOutEX[10:6], overFlow, zero, ALUResultEX, reset);
 Mux2x1_5Bits regDstMux(regDstMuxOut, rtEX, rdEX, RegDstEX);
 EX_MemReg EX_MEM(clk, RegWriteEX, MemtoRegEX, MemWriteEX, MemReadEX, ALUResultEX, ALUData2Mux_1Out
 		,regDstMuxOut, RegWriteMEM, MemtoRegMEM, MemWriteMEM, MemReadMEM, ALUResultMEM, memoryWriteDataMEM, writeRegMEM);
@@ -83,24 +78,21 @@ Mux2x1_32Bits writeBackMux(regWriteDataMEM, ALUResultWB, memoryReadDataWB, Memto
 
 
 
-//pc updated, change in singel cycle testbench
-// always@(clk)
-// #100 clk <= ~clk;
 integer i;
 
 initial
 begin
 
-	clk <= 0;
-	reset <= 1;
-	#50
-	reset <= 0;
+  clk <= 0;
+  reset <= 1;
+  #50
+  reset <= 0;
 
-	for (i = 0; i < 100; i = i + 1)
-	begin
-		#100
-		clk <= ~clk;
-	end
+  for (i = 0; i < 100; i = i + 1)
+  begin
+    #50
+    clk <= ~clk;
+  end
 
 
 end
