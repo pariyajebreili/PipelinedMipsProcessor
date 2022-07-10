@@ -1,4 +1,4 @@
-module ALUControl(clk, ALUControl, ALUOp, funct);
+module ALUControl(clk, ALUControl, ALUOp, func);
 
 	input clk;
 	input [3:0] ALUOp;

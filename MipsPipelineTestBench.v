@@ -5,11 +5,11 @@
 `include "Comparator.v"
 `include "ControlUnit.v"
 `include "DataMemory.v"
-`include "EX_MemReg.v"
-`include "ForwardingUnit.v"
-`include "HazardDetectionUnit.v"
-`include "ID_EX_reg.v"
-`include "IF_IDReg.v"
+`include "EXMemReg.v"
+`include "Forwarding.v"
+`include "HazardDetection.v"
+`include "IDEXReg.v"
+`include "IFIDReg.v"
 `include "InstructionMemory.v"
 `include "Mem_WbReg.v"
 `include "Mux2x1_5Bits.v"
@@ -61,7 +61,7 @@ InstructionMemory instructionMemory(clk, readPC, instructionIF);
 Adder PCAdder(PCPlus4IF ,readPC, 32'h00000004);
 Mux2x1_32Bits nextPCMux(nextPC, PCPlus4IF, branchAddress, PCMuxSel);
 and branchAndComparator(PCMuxSel, equalFlag, branchID);
-IF_ID_reg IF_ID(PCPlus4IF, instructionIF, instructionID, clk, holdIF_ID, PCPlus4ID, PCMuxSel);
+IFIDReg IF_ID(PCPlus4IF, instructionIF, instructionID, clk, holdIF_ID, PCPlus4ID, PCMuxSel);
 
 
 //ID_Stage
@@ -73,11 +73,11 @@ Comparator comparator(comparatorMux1Out, comparatorMux2Out, equalFlag);
 SignExtend signExtend(instructionID[15:0], signExtendOutID);
 ShiftLeft2 shiftLeft2(shiftOut, signExtendOutID);
 Adder branchAdder(branchAddress, shiftOut, PCPlus4ID);
-HazardDetectionUnit hazardUnit(MemReadEX, MemReadMEM, rtEX, instructionID, holdPC, holdIF_ID, hazardMuxSelector);
+HazardDetection hazardUnit(MemReadEX, MemReadMEM, rtEX, instructionID, holdPC, holdIF_ID, hazardMuxSelector);
 
 Mux2x1_10Bits ID_EXRegMux(controlSignalsID, {RegWriteID, MemtoRegID, MemWriteID, MemReadID, ALUSrcID, ALUOpID, RegDstID}
 			,10'b0000000000, hazardMuxSelector);
-ID_EX_reg ID_EX(RegWriteID, MemtoRegID, MemWriteID, MemReadID, ALUSrcID, ALUOpID, RegDstID, PCPlus4ID,registerData1ID ,registerData2ID
+IDEXReg ID_EX(RegWriteID, MemtoRegID, MemWriteID, MemReadID, ALUSrcID, ALUOpID, RegDstID, PCPlus4ID,registerData1ID ,registerData2ID
 		,signExtendOutID,instructionID[25:11],PCPlus4EX ,registerData1EX ,registerData2EX ,signExtendOutEX ,rsEX ,rtEX ,rdEX
 		,RegWriteEX,MemtoRegEX,MemWriteEX, MemReadEX,ALUSrcEX, ALUOpEX, RegDstEX,clk);
 
@@ -89,9 +89,9 @@ Mux2x1_32Bits ALUData2Mux_2(ALUData2, ALUData2Mux_1Out, signExtendOutEX, ALUSrcE
 ALUControl AluControl(clk, ALUControl, ALUOpEX, signExtendOutEX[5:0]);
 ALU32Bit ALU(ALUData1, ALUData2, ALUControl, signExtendOutEX[10:6], overFlow, zero, ALUResultEX, reset);
 Mux2x1_5Bits regDstMux(regDstMuxOut, rtEX, rdEX, RegDstEX);
-EX_MemReg EX_MEM(clk, RegWriteEX, MemtoRegEX, MemWriteEX, MemReadEX, ALUResultEX, ALUData2Mux_1Out
+EXMemReg EX_MEM(clk, RegWriteEX, MemtoRegEX, MemWriteEX, MemReadEX, ALUResultEX, ALUData2Mux_1Out
 		,regDstMuxOut, RegWriteMEM, MemtoRegMEM, MemWriteMEM, MemReadMEM, ALUResultMEM, memoryWriteDataMEM, writeRegMEM);
-ForwardingUnit forwardingUnit(RegWriteMEM, writeRegMEM, RegWriteWB, writeRegWB, rsEX, rtEX
+Forwarding forwardingUnit(RegWriteMEM, writeRegMEM, RegWriteWB, writeRegWB, rsEX, rtEX
 				,upperMux_sel,lowerMux_sel, comparatorMux1Selector,comparatorMux2Selector);
 
 

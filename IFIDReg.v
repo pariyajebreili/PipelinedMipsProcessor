@@ -1,24 +1,28 @@
-module IFIDReg(clk ,PCPlusOne ,instrIn ,instrOut, PCPlusOneOut, hold, IF_flush);
+module IFIDReg(PCplus4 ,instrIn ,instrOut ,clk ,hold,PCplus4Out,IF_flush);
 
-  input wire [31:0] instrIn,PCPlusOne;
+  input wire [31:0] instrIn,PCplus4;
   input clk ,hold,IF_flush;
-  output reg [31:0] instrOut, PCPlusOneOut;
+  output reg [31:0] instrOut, PCplus4Out;
 
   always @(posedge clk)
-  begin
+    begin
       
-      if (hold == 1'b0) 
-      begin
-          PCPlusOneOut <=PCPlusOne; 
-          instrOut     <= instrIn;  
+      if (hold==1'b0) 
+        
+        begin
+          
+      PCplus4Out<=PCplus4;
+          
+      instrOut <= instrIn;
+          
       end
-      else if (IF_flush == 1'b1)
-      begin
-          PCPlusOneOut <= PCPlusOne; 
-          instrOut     <= 32'b0;
-      end
+      else if (IF_flush==1'b1)
+        begin
+          PCplus4Out<=PCplus4; 
+          instrOut<=32'b0;
+        end
       
       
-  end
+    end
   
 endmodule
