@@ -1,5 +1,5 @@
 module EXMemReg (clk,RegWrite, MemtoReg,MemWrite, MemRead,ALUresult,writedata,writeReg,RegWriteOut, MemtoRegOut,MemWriteOut
-			,MemReadOut,ALUresultOut,writedataOut,writeRegOut);
+			           ,MemReadOut,ALUresultOut,writedataOut,writeRegOut);
   
   input clk;
   input RegWrite, MemtoReg;

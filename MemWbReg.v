@@ -1,5 +1,4 @@
-module MemWbReg(clk, RegWrite, MemtoReg,ALUresult,readData,writeReg,
-            RegWriteOut, MemtoRegOut, readDataOut, ALUresultOut, writeRegOut);
+module MemWbReg(RegWrite, MemtoReg,ALUresult,clk,readData,writeReg,RegWriteOut,MemtoRegOut,readDataOut,ALUresultOut,writeRegOut);
   
   input clk;
   input RegWrite, MemtoReg;
@@ -10,13 +9,14 @@ module MemWbReg(clk, RegWrite, MemtoReg,ALUresult,readData,writeReg,
   output reg [4:0] writeRegOut;
   
   always@(posedge clk)
-  begin
+    begin
       RegWriteOut<=RegWrite;
       MemtoRegOut<=MemtoReg;
       readDataOut<=readData;
       ALUresultOut<=ALUresult;
-      writeRegOut<=writeReg; 
-  end
+      writeRegOut<=writeReg;
+      
+    end
   
   
 endmodule

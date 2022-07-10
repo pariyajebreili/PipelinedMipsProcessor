@@ -1,9 +1,3 @@
-
-
-
-//     end
-      
-// endmodule
 module InstructionMemory(clk,pc,readdata);
 
 input clk;
@@ -49,8 +43,7 @@ initial //for testing
 	end
 
 
-always @ (pc)
-	
+always @ (pc)	
 	begin	 
 	readdata <= IMEM[pc>>2];
 	end			

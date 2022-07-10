@@ -1,7 +1,7 @@
 module IDEXReg (RegWrite, MemtoReg, MemWrite, MemRead,ALUSrc, ALUOp, RegDst, PCplus4 ,ReadData1_in ,ReadData2_in,SignExtendResult_in 
-		,regAddresss_in ,PCplus4out ,ReadData1_out ,ReadData2_out ,SignExtendResult_out ,rsOut ,rtOut ,rdOut, RegWriteOut
-		,MemtoRegOut,MemWriteOut, MemReadOut,ALUSrcOut, ALUOpOut, RegDstOut,clk);
-  
+		            ,regAddresss_in ,PCplus4out ,ReadData1_out ,ReadData2_out ,SignExtendResult_out ,rsOut ,rtOut ,rdOut, RegWriteOut
+		            ,MemtoRegOut,MemWriteOut, MemReadOut,ALUSrcOut, ALUOpOut, RegDstOut,clk);
+
   input wire RegWrite, MemtoReg;
   input wire MemWrite, MemRead; 
   input wire ALUSrc, RegDst;
