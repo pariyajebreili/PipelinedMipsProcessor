@@ -22,24 +22,24 @@ module Controller(func, opcode,RegDst,RegWrite, ALUSrc,MemToReg, MemRead, MemWri
 
 		RegDst 		= 0;
 		ALUSrc 		= 0;
-		MemToReg	= 0;
-		RegWrite	= 0;
+		MemToReg		= 0;
+		RegWrite		= 0;
 		MemRead		= 0;
-		MemWrite	= 0;
+		MemWrite		= 0;
 		branch		= 0;
 
 		//select oprand
 		case(opcode)	
 			`LW: begin
-				ALUSrc 	 		= 1;
+				ALUSrc 	 	= 1;
 				RegWrite 		= 1;
-				MemRead	 		= 1;
+				MemRead	 	= 1;
 				MemToReg 		= 1;
 				ALUOperation	= 2'b10;
 			end
 			`SW: begin
 				RegDst     		= 1'bx;
-				ALUSrc 	   		= 1;
+				ALUSrc 	   	= 1;
 				MemToReg   		= 1'bx;
 				MemWrite   		= 1;
 				ALUOperation	= 2'b10;
@@ -47,11 +47,11 @@ module Controller(func, opcode,RegDst,RegWrite, ALUSrc,MemToReg, MemRead, MemWri
 			`BEQ: begin
 				RegDst    		= 1'bx;
 				MemToReg 		= 1'bx;
-				branch			= 1;
+				branch		= 1;
 				ALUOperation	= 2'b11;
 			end
 			`RTYPE: begin
-				RegDst 		= 1;
+				RegDst 	= 1;
 				RegWrite	= 1;
 				case(func)
 						`FUNC_ADD : ALUOperation = 2'b10;
