@@ -1,17 +1,18 @@
-`timescale 1ns/1ns
+module ProgramCounter (nextPC ,outPC ,Reset ,clk, holdPC);
 
-module ProgramCounter(clk, rst, PcNext, PcIn);
+  input wire [31:0] nextPC;
+  input Reset , clk, holdPC;
+  output reg [31:0] outPC;
 
-	input clk, rst;
-	input [31:0] PcNext;
-	output reg [31:0] PcIn;
-	
-	always @(posedge clk) 
-      begin
-		if (rst == 1) 
-		    PcIn = 0;		    
-		else 
-		    PcIn = PcNext;
+  always@(posedge Reset) outPC <= 32'hFFFFFFFC;
+    
 
-	end
+  always @(posedge clk)
+    begin
+      if (holdPC==0) //to support stalls from hazard detection unit
+        begin
+                    outPC <= nextPC;
+        end
+    end
+
 endmodule
