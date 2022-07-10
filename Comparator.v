@@ -1,7 +1,9 @@
-module Comparator(Input1, Input2, Out);
-    input [31:0] Input1, Input2;
-    output Out;
+module Comparator(inData1 ,inData2 ,equalFlag);
 
-    assign Out = (Input1 - Input2 == 0) ? 1'b1 : 1'b0;
+input [31:0]  inData1;
+input [31:0]  inData2;
+output equalFlag;
+
+assign equalFlag = (inData1 == inData2) ? 1'b1 : 1'b0;
+
 endmodule
-

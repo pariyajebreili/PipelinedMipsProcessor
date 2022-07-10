@@ -1,28 +1,8 @@
-// `timescale 1ns/1ns
-// module PcAdder(PcNext, ShiftOut, AddAluOut);
+module Adder (out ,in1, in2);
 
-// 	input [31:0] PcNext;
-// 	input [31:0] ShiftOut;
-	
-// 	output reg [31:0] AddAluOut;
+input wire signed [31:0] in1, in2;
+output wire [31:0] out;
 
-// 	always @(*) 
-// 	begin
-// 		AddAluOut <= PcNext + ShiftOut;
-// 	end
-      
-// endmodule
+assign out = in1 + in2;
 
-`timescale 1ns/1ns
-module Adder(In1, In2, AddAluOut);
-
-	input [31:0] In1, In2;
-	
-	output reg [31:0] AddAluOut;
-
-	always @(*) 
-	begin
-		AddAluOut <= In1 + In2;
-	end
-      
 endmodule
