@@ -17,7 +17,7 @@ module HazardDetectionUnit(ID_ExMemRead,EX_MemMemRead,ID_Ex_Rt,IF_ID_Instr,holdP
     begin
       if (ID_ExMemRead && (holdPC == 1'b0) && (holdIF_ID == 1'b0))
         begin
-          if(ID_Ex_Rt==IF_ID_Instr[25:21] || ID_Ex_Rt==IF_ID_Instr[20:15] )
+          if(ID_Ex_Rt==IF_ID_Instr[25:21] || ID_Ex_Rt==IF_ID_Instr[20:16] )
             begin
               holdPC<=1;
               holdIF_ID<=1;
@@ -42,3 +42,9 @@ module HazardDetectionUnit(ID_ExMemRead,EX_MemMemRead,ID_Ex_Rt,IF_ID_Instr,holdP
   
   
 endmodule
+
+
+
+
+
+

@@ -50,7 +50,7 @@ module ForwardingUnit (EX_MemRegwrite,EX_MemWriteReg,Mem_WbRegwrite,Mem_WbWriteR
             
 
             
-          if((Mem_WbWriteReg==ID_Ex_Rt) && (EX_MemWriteReg==ID_Ex_Rt) )
+          if((Mem_WbWriteReg==ID_Ex_Rt) && (EX_MemWriteReg!=ID_Ex_Rt) )
           begin
             lowerMux_sel<=2'b01;
             comparatorMux2Selector<=2'b10;

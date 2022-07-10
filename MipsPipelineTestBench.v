@@ -45,7 +45,6 @@ SignExtend signExtend(instructionID[15:0], signExtendOutID);
 ShiftLeft2 shiftLeft2(shiftOut, signExtendOutID);
 Adder branchAdder(branchAddress, shiftOut, PCPlus4ID);
 HazardDetectionUnit hazardUnit(MemReadEX, MemReadMEM, rtEX, instructionID, holdPC, holdIF_ID, hazardMuxSelector);
-// module HazardDetectionUnit(ID_ExMemRead,EX_MemMemRead,ID_Ex_Rt,IF_ID_Instr,holdPC,holdIF_ID,muxSelector);
 
 Mux2x1_10Bits ID_EXRegMux(controlSignalsID, {RegWriteID, MemtoRegID, MemWriteID, MemReadID, ALUSrcID, ALUOpID, RegDstID}
 			,10'b0000000000, hazardMuxSelector);
