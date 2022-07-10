@@ -1,3 +1,32 @@
+`timescale 1ns/1ns
+`include "Adder.v"
+`include "ALU32Bit.v"
+`include "ALUControl.v"
+`include "Comparator.v"
+`include "ControlUnit.v"
+`include "DataMemory.v"
+`include "EX_MemReg.v"
+`include "ForwardingUnit.v"
+`include "HazardDetectionUnit.v"
+`include "ID_EX_reg.v"
+`include "IF_IDReg.v"
+`include "InstructionMemory.v"
+`include "Mem_WbReg.v"
+`include "Mux2x1_5Bits.v"
+`include "Mux2x1_10Bits.v"
+`include "Mux2x1_32Bits.v"
+`include "Mux3x1_32Bits.v"
+`include "PC.v"
+`include "RegisterFile.v"
+`include "ShiftLeft2.v"
+`include "SignExtend.v"
+
+
+
+
+
+
+
 module MipsPipelineTestBench();
 
 reg clk, reset;
@@ -95,5 +124,10 @@ begin
 
 
 end
+
+  initial begin
+    $dumpfile("MipsPipelineTestBench.vcd");
+    $dumpvars(0, MipsPipelineTestBench);
+  end
 
 endmodule

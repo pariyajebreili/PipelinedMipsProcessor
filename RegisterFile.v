@@ -10,9 +10,9 @@ module RegisterFile(ReadReg1, ReadReg2, WriteReg, WriteData, RegWrite, Clk, Read
 
 	always @(posedge reset) 
 		begin
-		RegFile[0] <= 32'h00000000;
-		RegFile[8] <= 32'h00000001;
-		RegFile[9] <= 32'h00000002;
+		RegFile[0]  <= 32'h00000000;
+		RegFile[8]  <= 32'h00000001;
+		RegFile[9]  <= 32'h00000002;
 		RegFile[10] <= 32'h00000000;
 		RegFile[11] <= 32'h00000000;
 		RegFile[12] <= 32'h00000000;

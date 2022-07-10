@@ -1,8 +1,8 @@
-module Adder (out ,in1, in2);
+module Adder (output1 ,input1, input2);
 
-input wire signed [31:0] in1, in2;
-output wire [31:0] out;
+input wire signed [31:0] input1, input2;
+output wire [31:0] output1  ;
 
-assign out = in1 + in2;
+assign output1   = input1 + input2;
 
 endmodule
