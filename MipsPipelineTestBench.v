@@ -87,7 +87,7 @@ module MipsPipelineTestBench();
     mux_3_to_1_32bits ALUData2Mux_1(ALUData2Mux_1Out, registerData2EX, regWriteDataMEM, ALUResultMEM, lowerMux_sel);
     mux_2_to_1_32bits ALUData2Mux_2(ALUData2, ALUData2Mux_1Out, signExtendOutEX, ALUSrcEX);
     ALUControl AluControl(clk, ALUControl, ALUOpEX, signExtendOutEX[5:0]);
-    ALU32Bit ALU(ALUData1, ALUData2, ALUControl, signExtendOutEX[10:6], overFlow, zero, ALUResultEX, reset);
+    ALU32Bit ALU(ALUData1, ALUData2, ALUControl, signExtendOutEX[10:6], zero, ALUResultEX, reset);
     mux_2_to_1_5bits regDstMux(regDstMuxOut, rtEX, rdEX, RegDstEX);
     EXMemReg EX_MEM(clk, RegWriteEX, MemtoRegEX, MemWriteEX, MemReadEX, ALUResultEX, ALUData2Mux_1Out
         ,regDstMuxOut, RegWriteMEM, MemtoRegMEM, MemWriteMEM, MemReadMEM, ALUResultMEM, memoryWriteDataMEM, writeRegMEM);
